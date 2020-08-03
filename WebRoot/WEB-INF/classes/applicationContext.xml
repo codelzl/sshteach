@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+
+<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+			<property name="jdbcUrl">
+			<!--如果直接用value属性，而不用value标签，则需要将“&”转义(&) ,用value标签，标签中一定不能含有空格、回车，因为它会将空格转换成"&nbsp;"，导致数据库会连接不上，除非重写数据源 -->
+			<value><![CDATA[jdbc:mysql://localhost:3306/sshdemo?useUnicode=true&characterEncoding=UTF8&useServerPrepStmts=true&prepStmtCacheSqlLimit=256&cachePrepStmts=true&prepStmtCacheSize=256&rewriteBatchedStatements=true]]></value>
+		</property>
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+		<property name="user" value="root"></property>
+		<property name="password"  value="123456"></property>
+		
+		<property name="acquireIncrement" value="3"></property>
+		<property name="initialPoolSize" value="10"></property>
+		<property name="minPoolSize" value="2"></property>
+		<property name="maxPoolSize" value="10"></property>
+	</bean>
+	
+	<!-- 配置spring的扫描器，然后给我们的类加上spring组件注解，就可以实现bean的自动载入-->
+	<context:component-scan base-package="com.beauxie.action,com.beauxie.service,com.beauxie.dao">
+	</context:component-scan>
+	
+	<!-- 导入其他的spring配置文件 ,如果都放在一个文件里，会看起来比较臃肿-->
+	<import resource="hibernateContext.xml"/>
+	</beans>
